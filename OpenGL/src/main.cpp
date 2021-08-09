@@ -3,10 +3,29 @@
 #include<GL/glew.h>
 #include <glfw3.h>
 
-// window dimensions
-int WIDTH = 800, HEIGHT = 800;
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-unsigned int VAO, VBO, shader;
+
+// window dimensions
+int WIDTH = 800, HEIGHT = 600;
+const float toRadian = (22.0f / 7.0f) / 180.0f;
+
+unsigned int VAO, VBO, shader, UniformModel;
+
+
+bool direction = true;
+float tri_Offset = 0.0f;
+float tri_MaxOffset = 0.7f;
+float tri_Increment = 0.005f;
+
+float current_Angle = 0.0f;
+
+bool size_Direction = true;
+float current_Size = 0.4f;
+float max_Size = 0.8f;
+float min_Size = 0.1f;
 
 //Vertex Shader
 static const char* vShader = "                      \n\
@@ -14,9 +33,11 @@ static const char* vShader = "                      \n\
                                                     \n\
 layout (location = 0) in vec3 pos;                  \n\
                                                     \n\
+uniform mat4 model;                                \n\
+                                                    \n\
 void main()                                         \n\
 {                                                   \n\
-     gl_Position = vec4(0.4 * pos,1.0);     \n\
+     gl_Position =  model * vec4(pos, 1.0);     \n\
 }";
 
 //Fragment shader
@@ -119,6 +140,7 @@ void CompileShader()
         return;
     }
 
+    UniformModel = glGetUniformLocation(shader, "model");
 }
 
 int main(void)
@@ -176,13 +198,56 @@ int main(void)
         // Handle User-Input
         glfwPollEvents();
 
+        if (direction)
+        {
+            tri_Offset += tri_Increment;
+        }
+
+        else
+        {
+            tri_Offset -= tri_Increment;
+        }
+
+        if (abs(tri_Offset) >= tri_MaxOffset)
+        {
+            direction = !direction;
+        }
+
+        current_Angle += 0.1f;
+        if (current_Angle >= 360.0f)
+        {
+            current_Angle -= 360.0f;
+        }
+
+        if (direction)
+        {
+            current_Size += 0.001f;
+        }
+        else
+        {
+            current_Size -= 0.001f;
+        }
+
+        if (current_Size >= max_Size || current_Size <=  min_Size)
+        {
+            size_Direction = !size_Direction;
+        }
+
         // Clear window
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shader);
-        glBindVertexArray(VAO);
 
+        glm::mat4 model(1.0f);
+        //model = glm::rotate(model, current_Angle * toRadian, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::translate(model, glm::vec3(tri_Offset, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(current_Size, 0.4f, 1.0f));
+
+
+        glUniformMatrix4fv(UniformModel, 1, GL_FALSE, glm::value_ptr(model));
+
+        glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glBindVertexArray(0);
