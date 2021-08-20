@@ -11,15 +11,27 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "window.h"
+#include "Camera.h"
 
 //Conversion 
 const float toRadians = 3.14159265f / 180.0f;
 
+float deltaTime = 0.0f;
+float lastTime = 0.0f;
+
+glm::vec3 positionVector = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+float yaw = -90.0f;
+float pitch = 0.0f;
+float moveSpeed = 5.0f;
+float sensitivity = 0.5f;
+
 window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader*> shaderList;
+Camera camera;
 
-// Vertex Shader code
+// Vertex Shader
 static const char* vShader = "Shaders/shader.vert";
 
 // Fragment Shader
@@ -67,15 +79,24 @@ int main()
 	CreateObjects();
 	CreateShaders();
 
-	unsigned int uniformProjection = 0, uniformModel = 0;
+	camera = Camera(positionVector, upVector, yaw, pitch, moveSpeed, sensitivity);
+
+	unsigned int uniformProjection = 0, uniformModel = 0, uniformView = 0;
 
 	glm::mat4 projection = glm::perspective(45.0f, mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
 	// Loop until window closed
 	while (!mainWindow.getShouldClose())
 	{
+		float currentTime = glfwGetTime();
+		deltaTime = currentTime - lastTime;
+		lastTime = currentTime;
+
 		// Get + Handle user input events
 		glfwPollEvents();
+
+		camera.KeyControl(mainWindow.getKeys(), deltaTime);
+		camera.MouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
 		// Clear window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -84,6 +105,7 @@ int main()
 		shaderList[0]->UseShader();
 		uniformModel = shaderList[0]->GetModelLocation();
 		uniformProjection = shaderList[0]->GetProjectionLocation();
+		uniformView = shaderList[0]->GetViewLocation();
 
 		//Triangle 1
 		glm::mat4 model(1.0f);
@@ -91,6 +113,7 @@ int main()
 		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.getViewMatrix()));
 		meshList[0]->RenderMesh();
 
 		//Triangle 2

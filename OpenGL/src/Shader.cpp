@@ -60,6 +60,11 @@ unsigned int Shader::GetModelLocation()
 	return uniformModel;
 }
 
+unsigned int Shader::GetViewLocation()
+{
+	return uniformView;
+}
+
 void Shader::UseShader()
 {
 	glUseProgram(shaderID);
@@ -83,7 +88,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 
 	if (!shaderID)
 	{
-		printf("Failed to create shader\n");
+		std::cout << "Failed to create shader " << std::endl;
 		return;
 	}
 
@@ -112,6 +117,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	}
 
 	uniformModel = glGetUniformLocation(shaderID, "model");
+	uniformView = glGetUniformLocation(shaderID, "view");
 	uniformProjection = glGetUniformLocation(shaderID, "projection");
 }
 
