@@ -19,6 +19,7 @@ public:
 	void MouseControl(float xChange, float yChange);
 
 	glm::mat4 getViewMatrix();
+	glm::vec3 getCameraPositon();
 
 private:
 	glm::vec3 Position;

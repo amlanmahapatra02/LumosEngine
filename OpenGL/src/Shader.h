@@ -23,13 +23,19 @@ public:
 	unsigned int GetAmbientColorLocation();
 	unsigned int GetDiffuseIntensityLocation();
 	unsigned int GetDirectionLocation();
+	unsigned int GetEyePositionLocation();
+	unsigned int GetSpecularIntensityLocation();
+	unsigned int GetShininessLocation();
 
 	void UseShader();
 	void ClearShader();
 
 private:
-	unsigned int shaderID, uniformProjection, uniformModel, uniformView,
-				 uniformAmibentIntensity, uniformAmibentColor, uniformDiffuseIntensity, uniformDirection;
+	unsigned int shaderID, uniformProjection, uniformModel, uniformView, uniformEyePosition;
+
+	unsigned int uniformAmibentIntensity, uniformAmibentColor, uniformDiffuseIntensity,
+				 uniformDirection, uniformSpecularIntensity, uniformShininess;
+				 
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void AddShader(unsigned int theProgram, const char* shaderCode, GLenum shaderType);

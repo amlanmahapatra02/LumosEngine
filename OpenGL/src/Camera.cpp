@@ -2,6 +2,14 @@
 
 Camera::Camera()
 {
+	Position = glm::vec3(0.0f,0.0f,0.0f);
+	worldUp = glm::vec3(0.0f, 0.0f, 0.0f);
+	front = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	yaw = 0.0f;
+	pitch = 0.0f;
+	moveSpeed = 0.0f;
+	turnSpeed = 0.0f;
 }
 
 Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, float startYaw, float startPitch,
@@ -82,6 +90,11 @@ glm::mat4 Camera::getViewMatrix()
 {
 	//(position + front) for general direction 
 	return glm::lookAt(Position, Position + front, Up);
+}
+
+glm::vec3 Camera::getCameraPositon()
+{
+	return Position;
 }
 
 void Camera::update()
