@@ -171,7 +171,7 @@ int main()
 	unsigned int spotLightCount = 0;
 	spotLight[0] = SpotLight(1.0f, 1.0f, 1.0f,
 							 0.1f, 2.0f,
-							 0.0f, 0.0f, 0.0f,
+							 1.0f, 0.0f, 0.0f,
 							 0.0f, -1.0f,0.0f,
 							 0.9f, 0.3f, 0.1f,
 							 20.0f);

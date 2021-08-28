@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)vendor\GLEW\include;$(SolutionDir)vendor\GLFW\include\GLFW;$(SolutionDir)vendor\GLM;$(SolutionDir)vendor\stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)vendor\GLEW\include;$(SolutionDir)vendor\GLFW\include\GLFW;$(SolutionDir)vendor\GLM;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)vendor\GLEW\include;$(SolutionDir)vendor\GLFW\include\GLFW;$(SolutionDir)vendor\GLM;$(SolutionDir)vendor\stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)vendor\GLEW\include;$(SolutionDir)vendor\GLFW\include\GLFW;$(SolutionDir)vendor\GLM;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -174,6 +174,7 @@
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\SpotLight.h" />
+    <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\window.h" />
   </ItemGroup>
