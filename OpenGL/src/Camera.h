@@ -20,6 +20,7 @@ public:
 
 	glm::mat4 getViewMatrix();
 	glm::vec3 getCameraPositon();
+	glm::vec3 getCameraDirection();
 
 private:
 	glm::vec3 Position;

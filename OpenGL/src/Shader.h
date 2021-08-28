@@ -11,6 +11,7 @@
 
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 class Shader
 {
@@ -33,8 +34,10 @@ public:
 	unsigned int GetShininessLocation();
 	unsigned int GetEyePositionLocation();
 
+
 	void SetDirectionalLight(DirectionalLight* dLight);
 	void SetPointLights(PointLight* pLight, unsigned int lightCount);
+	void SetSpotLights(SpotLight* sLight, unsigned int lightCount);
 
 	void UseShader();
 	void ClearShader();
@@ -43,6 +46,7 @@ public:
 
 private:
 	int pointLightCount;
+	int spotLightCount;
 
 	unsigned int shaderID, uniformProjection, uniformModel, uniformView, uniformEyePosition,
 		uniformSpecularIntensity, uniformShininess;
@@ -52,19 +56,41 @@ private:
 		unsigned int uniformAmbientIntensity;
 		unsigned int uniformDiffuseIntensity;
 		unsigned int uniformDirection;
+
 	} uniformDirectionalLight;
 
 	unsigned int uniformPointLightCount;
+	
 
 	struct {
 		unsigned int uniformColour;
 		unsigned int uniformAmbientIntensity;
 		unsigned int uniformDiffuseIntensity;
+
 		unsigned int uniformPosition;
 		unsigned int uniformConstant;
 		unsigned int uniformLinear;
 		unsigned int uniformExponent;
+
 	} uniformPointLight[MAX_POINT_LIGHTS];
+
+	unsigned int uniformSpotLightCount;
+
+	struct 
+	{
+		unsigned int uniformColour;
+		unsigned int uniformAmbientIntensity;
+		unsigned int uniformDiffuseIntensity;
+
+		unsigned int uniformPosition;
+		unsigned int uniformConstant;
+		unsigned int uniformLinear;
+		unsigned int uniformExponent;
+
+		unsigned int uniformDirection;
+		unsigned int uniformEdge;
+
+	}uniformSpotLight[MAX_SPOT_LIGHTS];
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
 	void AddShader(unsigned int theProgram, const char* shaderCode, GLenum shaderType);

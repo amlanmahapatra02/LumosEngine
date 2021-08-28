@@ -11,8 +11,8 @@ public:
 	window(int windowWidth, int windowHeight);
 	int Initialise();
 
-	float getBufferWidth() { return bufferWidth; }
-	float getBufferHeight() { return bufferHeight;  }
+	int getBufferWidth() { return bufferWidth; }
+	int getBufferHeight() { return bufferHeight;  }
 	bool getShouldClose() { return glfwWindowShouldClose(mainWindow); }
 	void SwapBuffer() { glfwSwapBuffers(mainWindow); }
 
