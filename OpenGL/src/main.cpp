@@ -1,4 +1,6 @@
 #include "Renderer.h"
+#include "Model.h"
+
 
 //Conversion 
 const float toRadians = 3.14159265f / 180.0f;
@@ -23,6 +25,8 @@ Material material2;
 Texture brickTexture;
 Texture dirtTexture;
 Texture plainTexture;
+
+Model heli;
 
 
 DirectionalLight mainLight;
@@ -142,18 +146,21 @@ int main()
 
 	camera = Camera(positionVector, upVector, yaw, pitch, moveSpeed, sensitivity);
 
-	brickTexture = Texture("resources/brick.png");
-	brickTexture.LoadTexture();
+	brickTexture = Texture("Textures/brick.png");
+	brickTexture.LoadTextureA();
 
-	dirtTexture = Texture("resources/dirt.png");
-	dirtTexture.LoadTexture();
+	dirtTexture = Texture("Textures/dirt.png");
+	dirtTexture.LoadTextureA();
 
-	plainTexture = Texture("resources/plain.png");
-	plainTexture.LoadTexture();
+	plainTexture = Texture("Textures/plain.png");
+	plainTexture.LoadTextureA();
+
+	heli = Model();
+	heli.LoadModel("Models/x-wing.obj");
 
 
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-							     0.1f, 0.1f,
+							     0.2f, 0.6f,
 								 0.0f, 0.0f, -1.0f);
 
 	unsigned int pointLightCount = 0;
@@ -195,6 +202,9 @@ int main()
 
 	glm::mat4 projection = glm::perspective(45.0f, (float)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
+	
+
+
 	// Loop until window closed
 	while (!mainWindow.getShouldClose())
 	{
@@ -221,13 +231,13 @@ int main()
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShiniess = shaderList[0].GetShininessLocation();
 
-		glm::vec3 lowerLight = camera.getCameraPositon();
-		lowerLight.y -= 0.26f;
-		spotLight[0].SetFlash(lowerLight, camera.getCameraDirection());
+		//glm::vec3 lowerLight = camera.getCameraPositon();
+		//lowerLight.y -= 0.26f;
+		//spotLight[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetPointLights(pointLight, pointLightCount);
-		shaderList[0].SetSpotLights(spotLight, spotLightCount);
+		//shaderList[0].SetPointLights(pointLight, pointLightCount);
+		//shaderList[0].SetSpotLights(spotLight, spotLightCount);
 		
 		
 
@@ -248,11 +258,19 @@ int main()
 		
 		//Floor
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		dirtTexture.UseTexture();
 		material.useMaterial(uniformSpecularIntensity, uniformShiniess);
 		meshList[2]->RenderMesh();
+
+		//Aircraft Model
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-9.0f, 0.0f, 10.0f));
+		model = glm::scale(model, glm::vec3(0.006f, 0.006f, 0.006f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		material.useMaterial(uniformSpecularIntensity, uniformShiniess);
+		heli.RenderModel();
 
 		//Removing data from memory
 		glUseProgram(0);
