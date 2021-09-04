@@ -42,13 +42,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -160,6 +160,7 @@
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShadowMap.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\window.cpp" />
@@ -173,12 +174,17 @@
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\PointLight.h" />
-    <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\ShadowMap.h" />
     <ClInclude Include="src\SpotLight.h" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\directional_shadow_map.frag" />
+    <None Include="Shaders\directional_shadow_map.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

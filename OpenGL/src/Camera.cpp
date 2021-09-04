@@ -92,7 +92,7 @@ glm::mat4 Camera::getViewMatrix()
 	return glm::lookAt(Position, Position + front, Up);
 }
 
-glm::vec3 Camera::getCameraPositon()
+glm::vec3 Camera::getCameraPosition()
 {
 	return Position;
 }
@@ -107,7 +107,6 @@ void Camera::update()
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.y = sin(glm::radians(pitch));
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
 	front = glm::normalize(front);
 
 	//recalculate right and up vectors

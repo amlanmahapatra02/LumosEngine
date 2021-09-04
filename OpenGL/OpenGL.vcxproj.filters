@@ -51,6 +51,9 @@
     <ClCompile Include="src\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShadowMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Mesh.h">
@@ -83,7 +86,7 @@
     <ClInclude Include="src\CommonValues.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer.h">
+    <ClInclude Include="src\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\SpotLight.h">
@@ -95,5 +98,12 @@
     <ClInclude Include="src\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ShadowMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\directional_shadow_map.vert" />
+    <None Include="Shaders\directional_shadow_map.frag" />
   </ItemGroup>
 </Project>

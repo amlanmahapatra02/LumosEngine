@@ -1,7 +1,5 @@
 #pragma once
 #define STB_IMAGE_IMPLEMENTATION
-
-
 #include <iostream>
 #include <vector>
 
@@ -22,3 +20,4 @@
 #include "CommonValues.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "Model.h"
