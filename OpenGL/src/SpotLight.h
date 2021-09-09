@@ -6,12 +6,14 @@ class SpotLight : public PointLight
 public:
 	SpotLight();
 
-	SpotLight(float red, float green, float blue,
-		float aIntensity, float dIntensity,
-		float xPos, float yPos, float zPos,
-		float xDir, float yDir, float zDir,
-		float con, float lin, float exp,
-		float edg);
+	SpotLight(unsigned int shadowWidth, unsigned int shadowHeight,
+			float near, float far,
+			float red, float green, float blue,
+			float aIntensity, float dIntensity,
+			float xPos, float yPos, float zPos,
+			float xDir, float yDir, float zDir,
+			float con, float lin, float exp,
+			float edg);
 
 	void UseLight(unsigned int ambientIntensityLocation, unsigned int ambientColorLocation,
 		unsigned int diffuseIntensityLocation, unsigned int positionLocation, unsigned int directionLocation,

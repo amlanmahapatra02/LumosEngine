@@ -25,6 +25,19 @@ void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLoc
 	CompileShader(vertexCode, fragmentCode);
 }
 
+void Shader::CreateFromFiles(const char* vertexLocation, const char* fragmentLocation, const char* geometryLocation)
+{
+	std::string vertexString = ReadFile(vertexLocation);
+	std::string fragmentString = ReadFile(fragmentLocation);
+	std::string geometryString = ReadFile(geometryLocation);
+
+	const char* vertexCode = vertexString.c_str();
+	const char* fragmentCode = fragmentString.c_str();
+	const char* geometryCode = geometryString.c_str();
+
+	CompileShader(vertexCode, fragmentCode, geometryCode);
+}
+
 std::string Shader::ReadFile(const char* fileLocation)
 {
 	std::string content;
@@ -59,6 +72,29 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	AddShader(shaderID, vertexCode, GL_VERTEX_SHADER);
 	AddShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
 
+	CompileProgram();
+
+}
+
+void Shader::CompileShader(const char* vertexCode, const char* fragmentCode, const char* geometryCode)
+{
+	shaderID = glCreateProgram();
+
+	if (!shaderID)
+	{
+		printf("Error creating shader program!\n");
+		return;
+	}
+
+	AddShader(shaderID, vertexCode, GL_VERTEX_SHADER);
+	AddShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
+	AddShader(shaderID, geometryCode, GL_GEOMETRY_SHADER);
+
+	CompileProgram();
+}
+
+void Shader::CompileProgram()
+{
 	int result = 0;
 	char eLog[1024] = { 0 };
 
@@ -90,7 +126,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformSpecularIntensity = glGetUniformLocation(shaderID, "material.specularIntensity");
 	uniformShininess = glGetUniformLocation(shaderID, "material.shininess");
 	uniformEyePosition = glGetUniformLocation(shaderID, "eyePosition");
-	
+
 	//PointLight
 	uniformPointLightCount = glGetUniformLocation(shaderID, "pointLightCount");
 
@@ -158,7 +194,20 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformTexture = glGetUniformLocation(shaderID, "theTexture");
 	uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightSpaceTransform");
 	uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
+
+	uniformOmniLightPos = glGetUniformLocation(shaderID, "lightPos");
+	uniformFarPlane = glGetUniformLocation(shaderID, "farPlane");
+
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		char locationBuffer[100] = { '\0' };
+
+		snprintf(locationBuffer, sizeof(locationBuffer), "lightMatrices[%d]", i);
+		UniformLightMatrices[i] = glGetUniformLocation(shaderID, locationBuffer);
+	}
 }
+
+
 
 unsigned int Shader::GetProjectionLocation()
 {
@@ -199,6 +248,16 @@ unsigned int Shader::GetShininessLocation()
 unsigned int Shader::GetEyePositionLocation()
 {
 	return uniformEyePosition;
+}
+
+unsigned int Shader::GetOmniLightPosLocation()
+{
+	return uniformOmniLightPos;
+}
+
+unsigned int Shader::GetFarPlaneLocation()
+{
+	return uniformFarPlane;
 }
 
 void Shader::SetDirectionalLight(DirectionalLight* dLight)
@@ -252,6 +311,14 @@ void Shader::SetDirectionalLightTransform(glm::mat4* lTransform)
 	glUniformMatrix4fv(uniformDirectionalLightTransform, 1, GL_FALSE, glm::value_ptr(*lTransform));
 }
 
+void Shader::SetLightMatrices(std::vector<glm::mat4> lightMatrices)
+{
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		glUniformMatrix4fv(UniformLightMatrices[i], 1, GL_FALSE, glm::value_ptr(lightMatrices[i]));
+	}
+}
+
 void Shader::UseShader()
 {
 	glUseProgram(shaderID);
@@ -296,6 +363,8 @@ void Shader::AddShader(unsigned int theProgram, const char* shaderCode, GLenum s
 
 	glAttachShader(theProgram, theShader);
 }
+
+
 
 Shader::~Shader()
 {
