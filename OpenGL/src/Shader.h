@@ -11,7 +11,6 @@
 
 
 #include "CommonValues.h"
-
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
@@ -23,7 +22,9 @@ public:
 
 	void CreateFromString(const char* vertexCode, const char* fragmentCode);
 	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation);
-	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation, const char* geometryLocation);
+	void CreateFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLocation);
+
+	void Validate();
 
 	std::string ReadFile(const char* fileLocation);
 
@@ -42,8 +43,8 @@ public:
 
 
 	void SetDirectionalLight(DirectionalLight* dLight);
-	void SetPointLights(PointLight* pLight, unsigned int lightCount);
-	void SetSpotLights(SpotLight* sLight, unsigned int lightCount);
+	void SetPointLights(PointLight* pLight, unsigned int lightCount,unsigned int textureUnit, unsigned int offset);
+	void SetSpotLights(SpotLight* sLight, unsigned int lightCount,unsigned int textureUnit, unsigned int offset);
 	void SetTexture(unsigned int textureUnit);
 	void SetDirectionalShadowMap(unsigned int textureUnit);
 	void SetDirectionalLightTransform(glm::mat4* lTransform);
@@ -107,8 +108,15 @@ private:
 
 	}uniformSpotLight[MAX_SPOT_LIGHTS];
 
+	struct
+	{
+		unsigned int shadowMap;
+		unsigned int farPlane;
+
+	}uniformOmniShadowMap[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
+
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
-	void CompileShader(const char* vertexCode, const char* fragmentCode, const char* geometryCode);
+	void CompileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode);
 	void AddShader(unsigned int theProgram, const char* shaderCode, GLenum shaderType);
 
 	void CompileProgram();

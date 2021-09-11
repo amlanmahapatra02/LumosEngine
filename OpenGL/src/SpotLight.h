@@ -24,8 +24,12 @@ public:
 
 	void SetFlash(glm::vec3 pos, glm::vec3 dir);
 
+	void Toggle() { isOn = !isOn; }
+
 private:
 	glm::vec3 direction;
 
 	float edge, processedEdge;
+
+	bool isOn;
 };
