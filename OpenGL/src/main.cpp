@@ -31,6 +31,9 @@ DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
 
+Skybox skybox;
+
+
 unsigned int pointLightCount = 0;
 unsigned int spotLightCount = 0;
 
@@ -137,16 +140,16 @@ void RenderScene()
 	//Brick Triangle
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	brickTexture.UseTexture();
-	dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	meshList[0]->RenderMesh();
+	//brickTexture.UseTexture();
+	//dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	//meshList[0]->RenderMesh();
 
 	//Floor 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	dirtTexture.UseTexture();
-	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	plainTexture.UseTexture();
+	mediumMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
 	meshList[2]->RenderMesh();
 
 	//xWing Model
@@ -165,9 +168,9 @@ void RenderScene()
 	
 	// BlackHaw model
 	model = glm::mat4(1.0f);
-	model = glm::rotate(model, blackhawkAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+	//model = glm::rotate(model, blackhawkAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 1.0f));
-	model = glm::rotate(model, 20.0f * toRadians, glm::vec3(0.0f, 0.0f, -1.0f));
+	//model = glm::rotate(model, 20.0f * toRadians, glm::vec3(0.0f, 0.0f, -1.0f));
 	model = glm::rotate(model, -90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -219,6 +222,12 @@ void OmniShadowMapPass(PointLight* light)
 // Get Uniforms From Shader Code
 void RenderPass(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
+	glViewport(0, 0, 1366, 768);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	skybox.DrawSkybox(viewMatrix, projectionMatrix);
+
 	shaderList[0].UseShader();
 
 	uniformModel = shaderList[0].GetModelLocation();
@@ -229,10 +238,7 @@ void RenderPass(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 	uniformShininess = shaderList[0].GetShininessLocation();
 
-	glViewport(0, 0, 1366, 768);
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 
 	glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
@@ -256,6 +262,37 @@ void RenderPass(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 	shaderList[0].Validate();
 	RenderScene();
 }
+
+void CalculateOmniShadowmapPass()
+{
+	for (unsigned int i = 0; i < pointLightCount; i++)
+	{
+		OmniShadowMapPass(&pointLights[i]);
+	}
+
+	for (unsigned int i = 0; i < spotLightCount; i++)
+	{
+		OmniShadowMapPass(&spotLights[i]);
+	}
+}
+
+void LoadSkybox1()
+{
+	std::vector<std::string> skyboxFaces;
+
+	//It has to be in that order
+	skyboxFaces.push_back("Textures/skybox3/corona_rt.png");
+	skyboxFaces.push_back("Textures/skybox3/corona_lf.png");
+
+	skyboxFaces.push_back("Textures/skybox3/corona_up.png");
+	skyboxFaces.push_back("Textures/skybox3/corona_dn.png");
+
+	skyboxFaces.push_back("Textures/skybox3/corona_bk.png");
+	skyboxFaces.push_back("Textures/skybox3/corona_ft.png");
+
+	skybox = Skybox(skyboxFaces);
+}
+
 
 int main()
 {
@@ -288,25 +325,25 @@ int main()
 
 	mainLight = DirectionalLight(2048, 2048,
 								1.0f, 1.0f, 1.0f,
-								0.0f, 0.2f,
+								0.02f, 0.6f,
 								0.0f, -15.0f, -10.0f);
 
 	pointLights[0] = PointLight(1024,1024,
 							    0.01f, 100.0f,
 								0.0f, 0.0f, 1.0f,
-								0.0f, 1.0f,
+								0.01f, 0.001f,
 								1.0f, 2.0f, 0.0f,
-								0.3f, 0.1f, 0.1f);
+								0.02f, 0.01f, 0.01f);
 
-	pointLightCount++;
+	//pointLightCount++;
 
 	pointLights[1] = PointLight(1024,1024,
 								0.1f, 100.0f,
 								0.0f, 1.0f, 0.0f,
-								0.0f, 1.0f,
+								0.01f, 0.001f,
 								-4.0f, 3.0f, 0.0f,
-								0.3f, 0.1f, 0.1f);
-	pointLightCount++;
+								0.02f, 0.01f, 0.01f);
+	//pointLightCount++;
 
 
 	spotLights[0] = SpotLight(1024, 1024,
@@ -318,17 +355,19 @@ int main()
 							  1.0f, 0.0f, 0.0f,
 							  20.0f);
 
-	spotLightCount++;
+	//spotLightCount++;
 
 	spotLights[1] = SpotLight(1024, 1024,
 							  0.01f, 100.0f,
 							  1.0f, 1.0f, 1.0f,
-							  0.0f, 1.0f,
+							  0.0f, 0.3f,
 							  0.0f, -1.5f, 0.0f,
 							 -100.0f, -1.0f, 0.0f,
 							  1.0f, 0.0f, 0.0f,
 							  20.0f);
 	spotLightCount++;
+
+	LoadSkybox1();
 
 	glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
@@ -355,15 +394,7 @@ int main()
 
 		DirectionalShadowMapPass(&mainLight);
 
-		for(unsigned int i = 0; i < pointLightCount; i++)
-		{
-			OmniShadowMapPass(&pointLights[i]);
-		}
-
-		for (unsigned int i = 0; i < spotLightCount; i++)
-		{
-			OmniShadowMapPass(&spotLights[i]);
-		}
+		CalculateOmniShadowmapPass();
 
 		RenderPass(camera.getViewMatrix(), projection);
 

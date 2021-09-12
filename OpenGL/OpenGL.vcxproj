@@ -162,6 +162,7 @@
     <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ShadowMap.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
     <ClCompile Include="src\SpotLight.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\window.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\ShadowMap.h" />
+    <ClInclude Include="src\Skybox.h" />
     <ClInclude Include="src\SpotLight.h" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\Texture.h" />

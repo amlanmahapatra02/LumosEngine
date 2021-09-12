@@ -21,3 +21,4 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Model.h"
+#include "Skybox.h"
