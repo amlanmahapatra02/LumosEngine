@@ -148,7 +148,7 @@ void RenderScene()
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	plainTexture.UseTexture();
+	dirtTexture.UseTexture();
 	mediumMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
 	meshList[2]->RenderMesh();
 
@@ -281,14 +281,14 @@ void LoadSkybox1()
 	std::vector<std::string> skyboxFaces;
 
 	//It has to be in that order
-	skyboxFaces.push_back("Textures/skybox3/corona_rt.png");
-	skyboxFaces.push_back("Textures/skybox3/corona_lf.png");
+	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_rt.tga");
+	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_lf.tga");
 
-	skyboxFaces.push_back("Textures/skybox3/corona_up.png");
-	skyboxFaces.push_back("Textures/skybox3/corona_dn.png");
+	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_up.tga");
+	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_dn.tga");
 
-	skyboxFaces.push_back("Textures/skybox3/corona_bk.png");
-	skyboxFaces.push_back("Textures/skybox3/corona_ft.png");
+	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_bk.tga");
+	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_ft.tga");
 
 	skybox = Skybox(skyboxFaces);
 }
@@ -324,7 +324,7 @@ int main()
 	//Rendering mainLight, SpotLight, PointLight 
 
 	mainLight = DirectionalLight(2048, 2048,
-								1.0f, 1.0f, 1.0f,
+								0.8f, 0.52f, 0.0f,
 								0.02f, 0.6f,
 								0.0f, -15.0f, -10.0f);
 
