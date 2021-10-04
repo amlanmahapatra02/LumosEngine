@@ -48,7 +48,7 @@ std::string Shader::ReadFile(const char* fileLocation)
 		return "";
 	}
 
-	std::string line = "";
+	std::string line;
 	while (!fileStream.eof())
 	{
 		std::getline(fileStream, line);

@@ -48,7 +48,7 @@ int window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// Create the window
-	mainWindow = glfwCreateWindow(width, height, "OpenGL-Renderer", NULL, NULL);
+	mainWindow = glfwCreateWindow(width, height, "Render-Engine", NULL, NULL);
 	if (!mainWindow)
 	{
 		std::cout << "GLFW window creation failed " << std::endl;

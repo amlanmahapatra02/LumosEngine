@@ -27,6 +27,9 @@ Material dullMaterial;
 Model xwing;
 Model blackhawk;
 
+
+
+
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -78,20 +81,6 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, float* 
 
 void CreateObjects()
 {
-	unsigned int indices[] = {
-		0, 3, 1,
-		1, 3, 2,
-		2, 3, 0,
-		0, 1, 2
-	};
-
-	float vertices[] = {
-		//	x      y      z			u	  v			nx	  ny    nz
-			-1.0f, -1.0f, -0.6f,	0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-			0.0f, -1.0f, 1.0f,		0.5f, 0.0f,		0.0f, 0.0f, 0.0f,
-			1.0f, -1.0f, -0.6f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,		0.5f, 1.0f,		0.0f, 0.0f, 0.0f
-	};
 
 	unsigned int floorIndices[] = {
 		0, 2, 1,
@@ -99,25 +88,16 @@ void CreateObjects()
 	};
 
 	float floorVertices[] = {
-		-10.0f, 0.0f, -10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, -10.0f,	10.0f, 0.0f,	0.0f, -1.0f, 0.0f,
-		-10.0f, 0.0f, 10.0f,	0.0f, 10.0f,	0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, 10.0f,		10.0f, 10.0f,	0.0f, -1.0f, 0.0f
+		//	x      y      z		 u	   v		nx	  ny    nz
+		-10.0f, 0.0f, -10.0f,	 0.0f, 0.0f,	0.0f, -1.0f, 0.0f,
+		 10.0f, 0.0f, -10.0f,	10.0f, 0.0f,	0.0f, -1.0f, 0.0f,
+		-10.0f, 0.0f,  10.0f,	 0.0f, 10.0f,	0.0f, -1.0f, 0.0f,
+		 10.0f, 0.0f,  10.0f,	10.0f, 10.0f,	0.0f, -1.0f, 0.0f
 	};
 
-	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
-	
 	Mesh* obj1 = new Mesh();
-	obj1->CreateMesh(vertices, indices, 32, 12);
+	obj1->CreateMesh(floorVertices, floorIndices, 32, 6);
 	meshList.push_back(obj1);
-
-	Mesh* obj2 = new Mesh();
-	obj2->CreateMesh(vertices, indices, 32, 12);
-	meshList.push_back(obj2);
-
-	Mesh* obj3 = new Mesh();
-	obj3->CreateMesh(floorVertices, floorIndices, 32, 6);
-	meshList.push_back(obj3);
 }
 
 //Shader Files for Shadow Map
@@ -133,24 +113,18 @@ void CreateShaders()
 	OmniShadowShader.CreateFromFiles("Shaders/omni_shadow_map.vert","Shaders/omni_shadow_map.geom", "Shaders/omni_shadow_map.frag");
 }
 
+
 void RenderScene()
 {
 	glm::mat4 model(1.0f);
-
-	//Brick Triangle
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//brickTexture.UseTexture();
-	//dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	//meshList[0]->RenderMesh();
 
 	//Floor 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	dirtTexture.UseTexture();
-	mediumMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	meshList[2]->RenderMesh();
+	dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	meshList[0]->RenderMesh();
 
 	//xWing Model
 	model = glm::mat4(1.0f);
@@ -176,7 +150,11 @@ void RenderScene()
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	mediumMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
 	blackhawk.RenderModel();
+
+
 }
+
+
 
 void DirectionalShadowMapPass(DirectionalLight* light)
 {
@@ -276,19 +254,21 @@ void CalculateOmniShadowmapPass()
 	}
 }
 
-void LoadSkybox1()
+void LoadSkyBox()
 {
 	std::vector<std::string> skyboxFaces;
 
-	//It has to be in that order
-	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_lf.tga");
+	//It has to be in that order x -x y -y z -z
+	//emplace_back is used instead of push_back because of performances
 
-	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_dn.tga");
+	skyboxFaces.emplace_back("Textures/skybox/right.jpg");
+	skyboxFaces.emplace_back("Textures/skybox/left.jpg");
 
-	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/skybox2/cupertin-lake_ft.tga");
+	skyboxFaces.emplace_back("Textures/skybox/top.jpg");
+	skyboxFaces.emplace_back("Textures/skybox/bottom.jpg");
+
+	skyboxFaces.emplace_back("Textures/skybox/front.jpg");
+	skyboxFaces.emplace_back("Textures/skybox/back.jpg");
 
 	skybox = Skybox(skyboxFaces);
 }
@@ -304,15 +284,14 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f);
 
-	brickTexture = Texture("Textures/brick.png");
-	brickTexture.LoadTextureA();
 	dirtTexture = Texture("Textures/dirt.png");
 	dirtTexture.LoadTextureA();
+
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
 
 	shinyMaterial = Material(4.0f, 256);
-	mediumMaterial = Material(2.0f, 128);
+	mediumMaterial = Material(1.5f, 128);
 	dullMaterial = Material(0.3f, 4);
 
 	xwing = Model();
@@ -321,29 +300,31 @@ int main()
 	blackhawk = Model();
 	blackhawk.LoadModel("Models/uh60.obj");
 
+
+
 	//Rendering mainLight, SpotLight, PointLight 
 
 	mainLight = DirectionalLight(2048, 2048,
-								0.8f, 0.52f, 0.0f,
-								0.02f, 0.6f,
+								0.8f, 0.8f, 0.8f,
+								0.1f, 0.6f,
 								0.0f, -15.0f, -10.0f);
 
 	pointLights[0] = PointLight(1024,1024,
 							    0.01f, 100.0f,
-								0.0f, 0.0f, 1.0f,
+								0.1f, 0.1f, 0.1f,
 								0.01f, 0.001f,
 								1.0f, 2.0f, 0.0f,
 								0.02f, 0.01f, 0.01f);
 
-	//pointLightCount++;
+	pointLightCount++;
 
 	pointLights[1] = PointLight(1024,1024,
 								0.1f, 100.0f,
-								0.0f, 1.0f, 0.0f,
+								0.1f, 0.1f, 0.1f,
 								0.01f, 0.001f,
 								-4.0f, 3.0f, 0.0f,
 								0.02f, 0.01f, 0.01f);
-	//pointLightCount++;
+	pointLightCount++;
 
 
 	spotLights[0] = SpotLight(1024, 1024,
@@ -355,7 +336,7 @@ int main()
 							  1.0f, 0.0f, 0.0f,
 							  20.0f);
 
-	//spotLightCount++;
+	spotLightCount++;
 
 	spotLights[1] = SpotLight(1024, 1024,
 							  0.01f, 100.0f,
@@ -367,7 +348,7 @@ int main()
 							  20.0f);
 	spotLightCount++;
 
-	LoadSkybox1();
+	LoadSkyBox();
 
 	glm::mat4 projection = glm::perspective(glm::radians(60.0f), (float)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
