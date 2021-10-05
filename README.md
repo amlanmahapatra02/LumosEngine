@@ -32,7 +32,7 @@ Sasta-Engine is an early-stage x64 graphics engine, Right now, this engine has b
 <ins>**Cloning:**</ins>
 
 Clone this repository to a local destination using git:  
-`git clone --recursive https://github.com/amlanmahapatra02/Render-Engine.git`  
+`git clone --recursive https://github.com/amlanmahapatra02/Sasta-Engine.git`  
 
 
 <ins>**Technical Information:**</ins>
