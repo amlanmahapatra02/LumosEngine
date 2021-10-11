@@ -24,8 +24,10 @@ Material shinyMaterial;
 Material mediumMaterial;
 Material dullMaterial;
 
-Model xwing;
+//Model xwing;
 Model blackhawk;
+Model Gundam;
+Model Miles;
 
 
 
@@ -127,12 +129,12 @@ void RenderScene()
 	meshList[0]->RenderMesh();
 
 	//xWing Model
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 10.0f));
-	model = glm::scale(model, glm::vec3(0.006f, 0.006f, 0.006f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-	xwing.RenderModel();
+	//model = glm::mat4(1.0f);
+	//model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 10.0f));
+	//model = glm::scale(model, glm::vec3(0.006f, 0.006f, 0.006f));
+	//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	//xwing.RenderModel();
 
 	blackhawkAngle -= 0.1f;
 	if (blackhawkAngle > 360.0f)
@@ -151,7 +153,22 @@ void RenderScene()
 	mediumMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
 	blackhawk.RenderModel();
 
+	//gundam model
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
+	model = glm::scale(model, glm::vec3(0.001f, 0.001f, 0.001f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	mediumMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	Gundam.RenderModel();
 
+	//Miles Morales
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, 90.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+	Miles.RenderModel();
 }
 
 
@@ -294,13 +311,17 @@ int main()
 	mediumMaterial = Material(1.5f, 128);
 	dullMaterial = Material(0.3f, 4);
 
-	xwing = Model();
-	xwing.LoadModel("Models/x-wing.obj");
+	//xwing = Model();
+	//xwing.LoadModel("Models/x-wing.obj");
 
 	blackhawk = Model();
 	blackhawk.LoadModel("Models/uh60.obj");
 
+	Gundam = Model();
+	Gundam.LoadModel("Models/sazabi_1.obj");
 
+	Miles = Model();
+	Miles.LoadModel("Models/A6RZGF38D9UOGKS1VLQ2TZQK8.obj");
 
 	//Rendering mainLight, SpotLight, PointLight 
 
