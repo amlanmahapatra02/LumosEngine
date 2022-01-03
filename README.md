@@ -1,5 +1,5 @@
 # Sasta-Engine
-### *A Work-In-Progress C++ graphics engine*
+### *An Opengl based Renderer*
 
 ***
 
