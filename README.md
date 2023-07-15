@@ -1,11 +1,11 @@
-# LumosEngine
+# Lumos Engine
 ### *An Opengl based Renderer*
 
 ***
 
 <ins>**Description:**</ins>
 
-Sasta-Engine is an early-stage x64 graphics engine, Right now, this engine has been developed for the **Windows OS only**, with 
+Lumos Engine is an early-stage x64 graphics engine, Right now, this engine has been developed for the **Windows OS only**, with 
 **Visual Studio 2019** as the only developement environment
 
 ***
